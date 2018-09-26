@@ -1,10 +1,16 @@
 package com.practice.mvc.dao;
 
+import com.practice.mvc.db.JdbcUtils;
 import org.apache.commons.dbutils.QueryRunner;
+import org.apache.commons.dbutils.handlers.BeanHandler;
+import org.apache.commons.dbutils.handlers.BeanListHandler;
+import org.apache.commons.dbutils.handlers.ScalarHandler;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class DAO<T> {
@@ -15,16 +21,15 @@ public class DAO<T> {
     public DAO() {
         Type type = this.getClass().getGenericSuperclass();
 
-        if (type instanceof ParameterizedType){
-            ParameterizedType parameterizedType = (ParameterizedType)type;
-            Type [] types = parameterizedType.getActualTypeArguments();
+        if (type instanceof ParameterizedType) {
+            ParameterizedType parameterizedType = (ParameterizedType) type;
+            Type[] types = parameterizedType.getActualTypeArguments();
 
-            if (types[0] instanceof Class){
-               clazz =  (Class<T>)types[0];
+            if (types[0] instanceof Class) {
+                clazz = (Class<T>) types[0];
             }
 
         }
-
 
 
     }
@@ -36,8 +41,18 @@ public class DAO<T> {
      * @param args
      * @return
      */
-    public <E> E getForValue(String sql, Object... args) {
-        return null;
+    protected  <E> E getForValue(String sql, Object... args) {
+        Connection connection = null;
+        E result = null;
+        try {
+            connection = JdbcUtils.getConnection();
+            result = (E) queryRunner.query(connection, sql, new ScalarHandler(), args);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            JdbcUtils.releaseConnection(connection);
+        }
+        return result;
     }
 
     /**
@@ -48,9 +63,17 @@ public class DAO<T> {
      * @return
      */
     public List<T> getForList(String sql, Object... args) {
-
-
-        return null;
+        Connection connection = null;
+        List<T> list = new ArrayList<>();
+        try {
+            connection = JdbcUtils.getConnection();
+            list = queryRunner.query(connection, sql, new BeanListHandler<>(clazz), args);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            JdbcUtils.releaseConnection(connection);
+        }
+        return list;
     }
 
     /**
@@ -60,10 +83,19 @@ public class DAO<T> {
      * @param args
      * @return
      */
-    public Class<T> get(String sql, Object... args) {
+    public T get(String sql, Object... args) {
+        Connection connection = null;
+        T result = null;
+        try {
+            connection = JdbcUtils.getConnection();
+            result = queryRunner.query(connection, sql, new BeanHandler<>(clazz), args);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            JdbcUtils.releaseConnection(connection);
+        }
 
-
-        return clazz;
+        return result;
     }
 
     /**
@@ -73,6 +105,15 @@ public class DAO<T> {
      * @param args: 填充 SQL 语句的占位符.
      */
     public void update(String sql, Object... args) {
+        Connection connection = null;
 
+        try {
+            connection = JdbcUtils.getConnection();
+            queryRunner.update(connection, sql, args);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            JdbcUtils.releaseConnection(connection);
+        }
     }
 }

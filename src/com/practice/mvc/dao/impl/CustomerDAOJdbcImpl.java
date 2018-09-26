@@ -15,31 +15,38 @@ public class CustomerDAOJdbcImpl extends DAO<Customer> implements CustomerDAO {
 
     @Override
     public List<Customer> getAll() {
-        return null;
+        String sql = "select* from customers";
+        return getForList(sql);
     }
 
     @Override
     public void save(Customer customer) {
-
+        String sql = "insert into customers value(?,?,?,?)";
+        update(sql,customer.getId(),customer.getName(),customer.getAddress(),customer.getPhone());
     }
 
     @Override
     public Customer get(Integer id) {
-        return null;
+        String sql = "select * from customers where id = ?";
+       return get(sql,id);
     }
 
     @Override
     public void delete(Integer id) {
-
+        String sql = "delete from customers where id = ?";
+        update(sql,id);
     }
 
     @Override
     public void update(Customer customer) {
-
+        String sql = "update customers set name=?,address=?,phone = ? where id = ?";
+        update(sql,customer.getName(),customer.getAddress(),customer.getPhone(),customer.getId());
     }
 
     @Override
     public long getCountWithName(String name) {
-        return 0;
+        String sql = "select count(id) from customers where name = ?";
+       long count= getForValue(sql,name);
+        return count;
     }
 }

@@ -14,10 +14,14 @@ public class JdbcUtils {
      * @param connection
      */
     public static void releaseConnection(Connection connection) {
-
+        try {
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
-    private static DataSource dataSource = null;
+    private static DataSource dataSource;
 
     //只允许有一个连接池存在，所以直接使用静态代码块来执行一次就可以了
     static {
