@@ -27,8 +27,8 @@ public class CustomerDAOJdbcImplTest {
     @Test
     public void save() {
         Customer customer = new Customer();
-        customer.setId(24);
-        customer.setName("kobe bryant");
+        customer.setId(23);
+        customer.setName("michael jordan");
         customer.setAddress("los angeles");
         customer.setPhone("123");
         c.save(customer);

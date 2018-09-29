@@ -1,5 +1,6 @@
 package com.practice.mvc.dao;
 
+import com.practice.mvc.dao.impl.CriteriaCustomer;
 import com.practice.mvc.domain.Customer;
 
 import java.util.List;
@@ -11,7 +12,7 @@ public interface CustomerDAO {
 //     * @param cc: 封装了查询条件
 //     * @return
 //     */
-//    //public List<Customer> getForListWithCriteriaCustomer(CriteriaCustomer cc);
+    public List<Customer> getForListWithCriteriaCustomer(CriteriaCustomer cc);
 
     public List<Customer> getAll();
 
