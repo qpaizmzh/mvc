@@ -7,6 +7,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
 <html>
 <head>
     <title>$Title$</title>
@@ -31,8 +32,8 @@
     address:<input type="text" name="address"><br>
     phone:<input type="text" name="phone"><br>
     <input type="submit" value="全查">
-</form>
-
+    </form>
+<a href="addCustomer.jsp">add new Customer</a>
 <br>
 <br>
 <%
@@ -61,7 +62,7 @@
         </td>
         <td><%=customer.getPhone()%>
         </td>
-        <td><a href="update.do">update</a>/
+        <td><a href="edit.do?id=<%=customer.getId()%>">update</a>/
             <a href="delete.do?id=<%=customer.getId()%>" class="delete">delete</a>
         </td>
     </tr>

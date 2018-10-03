@@ -12,6 +12,7 @@ public class CustomerDAOJdbcImpl extends DAO<Customer> implements CustomerDAO {
     public List<Customer> getForListWithCriteriaCustomer(CriteriaCustomer cc) {
         String sql = "select id,name,address,phone from customers where " +
                 "name LIKE ? and address LIKE ? and phone LIKE ?";
+        System.out.println("JDBC");
 
         return getForList(sql, cc.getName() == null ? "%%" : "%" + cc.getName() + "%",
                 cc.getAddress() == null ? "%%" : "%" + cc.getAddress() + "%",
@@ -26,8 +27,8 @@ public class CustomerDAOJdbcImpl extends DAO<Customer> implements CustomerDAO {
 
     @Override
     public void save(Customer customer) {
-        String sql = "insert into customers value(?,?,?,?)";
-        update(sql, customer.getId(), customer.getName(), customer.getAddress(), customer.getPhone());
+        String sql = "insert into customers (name,address,phone)value(?,?,?)";
+        update(sql, customer.getName(), customer.getAddress(), customer.getPhone());
     }
 
     @Override
